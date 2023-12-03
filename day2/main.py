@@ -1,4 +1,3 @@
-import re
 #12 red, 13 green, 14 blue
 COLORS = {"red":12 , "green":13 , "blue":14}
 
