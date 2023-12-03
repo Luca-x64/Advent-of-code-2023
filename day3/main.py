@@ -1,7 +1,15 @@
 import re
 lines = []
-with open("test.txt",'r') as f:
-#with open("input.txt",'r') as f:
+
+
+
+def checkstr(s):
+    a = re.sub(r'\.','',line)
+    print("AA",a)
+    return len(a) == 0
+
+#with open("test.txt",'r') as f:
+with open("input.txt",'r') as f:
     lines = f.readlines()
 
 sum = 0
@@ -11,12 +19,13 @@ for i in range(len(lines)):
     rightBorder = len(line)
     bottomBorder = len(lines)
     subline=line
-
+    #print("line:",i+1)
 
     numeri = re.findall("\d+",line)
-    startSub = 0
+    #print("Numeri;",numeri)
 
     for j in range(len(numeri)):
+        startSub = 0
         valid = True
         num = numeri[j]
         
@@ -31,5 +40,34 @@ for i in range(len(lines)):
             dopo = line[startSub:]
 
         #Line above and below
+        aboveSub,belowSub = 0,0
+        init,end = 0,0
+        #left and rigth limit
+        if startSub > 0:
+                init = startSub-1-len(num)
+        else:
+            init = 0
+
+        if startSub == len(line):
+            end = len(line)
+        else:
+            end = startSub+len(num)+1 -len(num)
+
+        if i != 0: #above
+            aboveSub= lines[i-1][init:end]
+            
+        # print("debug")  
+        # print("i",init,end)  
+        
+        if i+1 < len(lines): #below
+            belowSub = lines[i+1][init:end]
+        print(line)
+        print(aboveSub)
+        print(checkstr(aboveSub))
         input()
-    
+        #print(checkstr(line))
+        # print(prima,num,dopo)    
+        # print("a",aboveSub,"b",belowSub)
+
+
+
