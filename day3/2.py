@@ -17,7 +17,8 @@ for i in range(len(lines)):
     nearNumbers = []
     startSub = 0
     for num in numeri:
-        leftIndex = startSub+ line[startSub:].index(num)        
+        leftIndex = startSub+ line[startSub:].index(num)      
+        print("leftIndex:",leftIndex)  
         #Left
 
         prima = line[max([leftIndex-1,0]):leftIndex] 
@@ -40,22 +41,23 @@ for i in range(len(lines)):
                 fix = 1
 
             aboveSub= lines[i-1][max([leftIndex-1,0]):rightIndex-1]
-
+            
             sidesx = "."+lines[i-1][max([0,leftIndex-3]):leftIndex]
             sidedx = lines[i-1][leftIndex +fix :min([len(line), leftIndex+fix+4])]+"."
-            
-            b = lines[i-1][max([0,leftIndex-3]):min([leftIndex+4+fix,len(line)])]
+            #print(sidesx,sidedx)
+            b = lines[i-1][max([0,leftIndex-3]):min([leftIndex+4+fix,len(lines[i-1])])]
             print("B",b)
 
-            #TODO
-            #if lines[i-1][leftIndex]==".":
-                #split = b[:-1].split(".")
-                #for n in split:
-                #    if n.isdigit():
-                #        nearNumbers.append(int(n))
+            
+            if lines[i-1][leftIndex]==".":
+                left = b[:line[startSub:].index(num)]
+                right = b[:leftIndex]
+                print("left",left)
+                print("right",right)
+            else:
+                aboveNum = b[sidesx.rfind("."): leftIndex+fix+ sidedx.find(".")].replace(".","")
+                print(aboveNum)
             print(nearNumbers)
-            aboveNum = b[sidesx.rfind("."): leftIndex+fix+ sidedx.find(".")].replace(".","")
-
         #Below
         if i+1 < len(lines):
     
@@ -69,7 +71,7 @@ for i in range(len(lines)):
         
             b = lines[i+1][max([0,leftIndex-3]):min([leftIndex+4+fix,len(line)])]
             belowNum = b[sidesx.rfind("."): leftIndex+fix+ sidedx.find(".")].replace(".","")
-        print(aboveNum,belowNum)
+        #print(aboveNum,belowNum)
         side = [checkstr(aboveSub), checkstr(belowSub), checkstr(prima), checkstr(dopo)]
         input()
 
