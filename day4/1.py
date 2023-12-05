@@ -6,9 +6,7 @@ with open("input.txt",'r') as f:
 
 sum = 0
 for i in range(len(lines)):
-    
     line = lines[i][9:].replace("  ",",").replace(" ",",").replace("\n","")
-
     split = line.split(",|,")
     win = set(split[0].split(","))
     hand = set(split[1].split(","))
