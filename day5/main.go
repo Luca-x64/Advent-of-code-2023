@@ -20,7 +20,7 @@ func main() {
 				lines = append(lines, line)
 			}
 		}
-		struttura := [][][]string{{}}
+		var struttura [][][]string 
 		seedstring := strings.Split(lines[0], " ")[1:]
 		seeds := []int{}
 		for s := range seedstring {
@@ -44,22 +44,21 @@ func main() {
 		//Println(lines)
 		//Print(struttura)
 		//Println(struttura)
-
 		for i := 0; i < len(struttura); i++ {
-
+			Println(i+1)
 			//nochanges := true
 			for j := 0; j < len(struttura[i]); j++ {
 				for s := 0; s < len(seeds); s++ {
 					seme := seeds[s]
-					source, _ := strconv.Atoi(struttura[i][j][0])
-					dest, _ := strconv.Atoi(struttura[i][j][1])
+					dest, _ := strconv.Atoi(struttura[i][j][0])
+					source, _ := strconv.Atoi(struttura[i][j][1])
 					rangee, _ := strconv.Atoi(struttura[i][j][2])
 					//Println(source,dest,rangee)
 					if seme >= source && seme < source+rangee {
 						diff := seme - source
 						seeds[s] = dest + diff
 						//nochanges = false
-						Println("a", source, dest, rangee, seeds)
+						Println(seme,diff,dest, source, rangee, seeds)
 					}
 				}
 			}
