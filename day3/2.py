@@ -5,8 +5,8 @@ def checkstr(s):
     a = re.findall('\d',s)
     return len(a) != 0
 
-with open("test.txt",'r') as f:
-#with open("input.txt",'r') as f:
+#with open("test.txt",'r') as f:
+with open("input.txt",'r') as f:
     lines = f.readlines()
 
 sum = 0
@@ -14,20 +14,20 @@ sum = 0
 for i in range(len(lines)):
     lines[i] = re.sub(r'[^0-9.*]','.', lines[i])
     line = lines[i]
-    print("line,",i)
+    #print("line,",i)
     numeri = re.findall("[*]",line)
     
-    nearNumbers = []
     startSub = 0
     cnt = 0
     for num in numeri:
+        nearNumbers = []
         leftIndex = startSub+ line[startSub:].index(num)
         
         #Left
         prima = line[max([leftIndex-3,0]):leftIndex] 
         #Right
         dopo = 0 
-        rightIndex = leftIndex+1+len(num)
+        rightIndex = leftIndex+len(num)
         if rightIndex != len(line):
             rightIndex = rightIndex+1
         
@@ -37,6 +37,7 @@ for i in range(len(lines)):
             nearNumbers.append(prima.replace("*",".").replace(".",""))
         if dopo[0].isdigit():
             nearNumbers.append(dopo.replace("*",".").replace(".",""))
+
         #Line above and below
         aboveSub,belowSub = "",""
 
@@ -50,16 +51,19 @@ for i in range(len(lines)):
             
             sidesx = "."+lines[i-1][max([0,leftIndex-3]):leftIndex]
             sidedx = lines[i-1][leftIndex +fix :min([len(line), leftIndex+fix+4])]+"."
+
             #print("side:",sidesx,sidedx)
             b = lines[i-1][max([0,leftIndex-3]):min([leftIndex+4+fix,len(lines[i-1])])]
+            
             if lines[i-1][leftIndex].replace("*",".")==".":
                 if sidesx[-1].isdigit():
                     nearNumbers.append(sidesx.replace("*",".").replace(".","")) 
                 if sidedx[0].isdigit():
                     nearNumbers.append(sidedx.replace("*",".").replace(".","")) 
-            else:
-                aboveNum = re.sub(r'\D','',b[sidesx.rfind("."): leftIndex+fix+ sidedx.find(".")]).replace("*",".").replace(".","")
+            else:             
+                aboveNum = re.sub(r'\D','',b[sidesx.rfind("."):leftIndex+sidedx.find(".")]).replace("*",".").replace(".","")
                 nearNumbers.append(aboveNum)
+                    
         #Below
         if i+1 < len(lines):
             fix=0
@@ -69,22 +73,30 @@ for i in range(len(lines)):
 
             sidesx = "."+lines[i+1][max([0,leftIndex-3]):leftIndex]
             sidedx = lines[i+1][leftIndex +fix :min([len(line), leftIndex+fix+4])]+"."
-        
+           
             b = lines[i+1][max([0,leftIndex-3]):min([leftIndex+4+fix,len(lines[i+1])])]
             if lines[i+1][leftIndex].replace("*",".")==".":
                 if sidesx[-1].isdigit():
                     nearNumbers.append(sidesx.replace("*",".").replace(".","")) 
                 if sidedx[0].isdigit():
-                    nearNumbers.append(sidedx.replace("*",".").replace(".",""))             
+                    nearNumbers.append(sidedx.replace("*",".").replace(".",""))            
             else:
-                belowNum = re.sub(r'\D','',b[sidesx.rfind("."): leftIndex+fix+ sidedx.find(".")].replace("*",".").replace(".",""))
+                belowNum = re.sub(r'\D','',b[sidesx.rfind("."):len(sidesx)+sidedx.find(".")].replace("*",".").replace(".",""))
+                if len(belowNum) >3:
+                    print(belowNum)
+                    print("side,",sidesx,sidedx)
+                    print("b",b)
+                    print("leftindex",b[:])
+                    print("range",sidesx.rfind("."),leftIndex+sidedx.find("."))
+                    print(b[sidesx.rfind("."):leftIndex+sidedx.find(".")])
+                    print()
                 nearNumbers.append(belowNum)
+                
         #print(aboveNum,belowNum)
-        
-        print(nearNumbers)
+        #print(nearNumbers)
         if len(nearNumbers) ==2:
             sum += int(nearNumbers[0])*int(nearNumbers[1])
-
+            print(" ",sum)
         startSub= rightIndex - 1
         
 print(sum)
