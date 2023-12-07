@@ -1,10 +1,6 @@
 import re
 lines = []
 
-def checkstr(s):
-    a = re.findall('\d',s)
-    return len(a) != 0
-
 #with open("test.txt",'r') as f:
 with open("input.txt",'r') as f:
     lines = f.readlines()
@@ -14,14 +10,14 @@ sum = 0
 for i in range(len(lines)):
     lines[i] = re.sub(r'[^0-9.*]','.', lines[i])
     line = lines[i]
-    #print("line,",i)
+
     numeri = re.findall("[*]",line)
     
-    startSub = 0
-    cnt = 0
+    startSub = 0 #start substring position
     for num in numeri:
         nearNumbers = []
-        leftIndex = startSub+ line[startSub:].index(num)
+
+        leftIndex = startSub+ line[startSub:].index(num) #Index *
         
         #Left
         prima = line[max([leftIndex-3,0]):leftIndex] 
@@ -34,9 +30,9 @@ for i in range(len(lines)):
         dopo = line[rightIndex-1:min([rightIndex+3,len(line)])]
 
         if prima[-1].isdigit():
-            nearNumbers.append(prima.replace("*",".").replace(".",""))
+            nearNumbers.append(prima[prima.rfind(".")+1:])
         if dopo[0].isdigit():
-            nearNumbers.append(dopo.replace("*",".").replace(".",""))
+            nearNumbers.append(dopo[:dopo.find(".")])
 
         #Line above and below
         aboveSub,belowSub = "",""
@@ -52,23 +48,24 @@ for i in range(len(lines)):
             sidesx = "."+lines[i-1][max([0,leftIndex-3]):leftIndex]
             sidedx = lines[i-1][leftIndex +fix :min([len(line), leftIndex+fix+4])]+"."
 
-            #print("side:",sidesx,sidedx)
             b = lines[i-1][max([0,leftIndex-3]):min([leftIndex+4+fix,len(lines[i-1])])]
             
             if lines[i-1][leftIndex].replace("*",".")==".":
                 if sidesx[-1].isdigit():
-                    nearNumbers.append(sidesx.replace("*",".").replace(".","")) 
+                    nearNumbers.append(sidesx[sidesx.rfind(".")+1:]) 
                 if sidedx[0].isdigit():
-                    nearNumbers.append(sidedx.replace("*",".").replace(".","")) 
+                    nearNumbers.append(sidedx[:sidedx.index(".")])  
             else:             
-                aboveNum = re.sub(r'\D','',b[sidesx.rfind("."):leftIndex+sidedx.find(".")]).replace("*",".").replace(".","")
+                aboveNum = re.sub(r'\D','',b[sidesx.rfind("."):len(sidesx)-1+sidedx.find(".")])
                 nearNumbers.append(aboveNum)
+                
                     
         #Below
         if i+1 < len(lines):
             fix=0
             if lines[i+1][leftIndex].replace("*",".")==".":
                 fix = 1
+
             belowSub = lines[i+1][max([leftIndex-1,0]):rightIndex-1]
 
             sidesx = "."+lines[i+1][max([0,leftIndex-3]):leftIndex]
@@ -77,26 +74,16 @@ for i in range(len(lines)):
             b = lines[i+1][max([0,leftIndex-3]):min([leftIndex+4+fix,len(lines[i+1])])]
             if lines[i+1][leftIndex].replace("*",".")==".":
                 if sidesx[-1].isdigit():
-                    nearNumbers.append(sidesx.replace("*",".").replace(".","")) 
+                    nearNumbers.append(sidesx[sidesx.rfind(".")+1:]) 
                 if sidedx[0].isdigit():
-                    nearNumbers.append(sidedx.replace("*",".").replace(".",""))            
+                    nearNumbers.append(sidedx[:sidedx.index(".")])            
             else:
-                belowNum = re.sub(r'\D','',b[sidesx.rfind("."):len(sidesx)+sidedx.find(".")].replace("*",".").replace(".",""))
-                if len(belowNum) >3:
-                    print(belowNum)
-                    print("side,",sidesx,sidedx)
-                    print("b",b)
-                    print("leftindex",b[:])
-                    print("range",sidesx.rfind("."),leftIndex+sidedx.find("."))
-                    print(b[sidesx.rfind("."):leftIndex+sidedx.find(".")])
-                    print()
+                belowNum = re.sub(r'\D','',b[sidesx.rfind("."):len(sidesx)+sidedx.find(".")])
                 nearNumbers.append(belowNum)
                 
-        #print(aboveNum,belowNum)
-        #print(nearNumbers)
         if len(nearNumbers) ==2:
+            print(nearNumbers,end="")
             sum += int(nearNumbers[0])*int(nearNumbers[1])
-            print(" ",sum)
         startSub= rightIndex - 1
-        
+    
 print(sum)
