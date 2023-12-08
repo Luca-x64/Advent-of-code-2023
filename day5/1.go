@@ -30,7 +30,7 @@ func main() {
 			convert, _ := strconv.Atoi(seedstring[s])
 			seeds = append(seeds, convert)
 		}
-
+		
 		var mappa [][]string
 		for i := range lines {
 			if unicode.IsDigit(rune(lines[i][0])) { // numeri
