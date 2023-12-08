@@ -11,70 +11,55 @@ import (
 )
 
 func main() {
-	file, _ := os.Open("test.txt")
-	//file, err := os.Open("input.txt")
+	//file, _ := os.Open("test.txt")
+	file, _ := os.Open("input.txt")
 	scanner := bufio.NewScanner(file)
-
 	min := 100000000000000
 
 	scanner.Scan()
 	line := scanner.Text()
-	cnt :=0
 	seedstring := strings.Split(line, " ")[1:]
-	//Println(seedstring)
-	seed := 0
+	var maps []string
+	for scanner.Scan(){
+		maps = append(maps,scanner.Text())
+	}
+	file.Close()
+	
+	seed := 0	
 	for i := 0; i < len(seedstring); i += 2 {
 		startSeed, _ := strconv.Atoi(seedstring[i])
 		rangee, _ := strconv.Atoi(seedstring[i+1])
 		for s := 0; s < rangee; s++ {
 			seed = startSeed + s
-			Println(" seed", seed)
-
-			//var mappa [][]string
+			Println(i,"/",len(seedstring)/2,"\t",seed)
 			status := true
-			for scanner.Scan() {
-				line := scanner.Text()
-				if len(line) > 0 && status{
-					if unicode.IsDigit(rune(line[0])) && status { // numeri
-						//mappa = append(mappa, strings.Split(line, (" ")))
-						numbers := strings.Split(line, (" "))
 
-						//Println("m", numbers)
-						//var history []int
+			for j := range maps {
+				line := maps[j]
+				if len(line) > 0{
+					if unicode.IsDigit(rune(line[0])) && status { 
+						numbers := strings.Split(line, (" "))
 						dest, _ := strconv.Atoi(string(numbers[0]))
 						source, _ := strconv.Atoi(string(numbers[1]))
 						rangeee, _ := strconv.Atoi(string(numbers[2]))
 
-						if seed >= source && seed < source+rangeee /*&& slices.Index(history, s) == -1*/ {
+						if seed >= source && seed < source+rangeee {
 							diff := seed - source
 							seed = (dest + diff)
-							
 							status = false
-							//history = append(history, seed)
 						}
-
 					} else {
 						status = true
 					}
-					Print(status,"")
 				}
 			}
-
-			// Println("New Scan")
-			scanner = bufio.NewScanner(file)
-			
-			cnt+=1
-			Print(min,seed,seed<min)
 			if seed < min {
 				min = seed
 				Println("min=", seed)
-	
 			}
 		}
-
 	}
 	Println()
-
-	//Println("minimo:", min)
+	Println("minimo:", min)
 
 }
