@@ -4,73 +4,77 @@ import (
 	"bufio"
 	. "fmt"
 	"os"
-	"slices"
+	_ "slices"
 	"strconv"
 	"strings"
 	"unicode"
 )
 
 func main() {
-	//file, err := os.Open("test.txt")
-	file, err := os.Open("input.txt")
-	var seeds []int
-	if err == nil {
-		scanner := bufio.NewScanner(file)
+	file, _ := os.Open("test.txt")
+	//file, err := os.Open("input.txt")
+	scanner := bufio.NewScanner(file)
 
-		cnt := 0
-		var seedstring []string
-		scanner.Scan()
-		line := scanner.Text()
-		seedstring = strings.Split(line, " ")[1:]
-		for i := 0; i < len(seedstring)-1; i += 2 {
-			seed, _ := strconv.Atoi(seedstring[i])
-			rangee, _ := strconv.Atoi(seedstring[i+1])
-			for s := 0; s < rangee; s++ {
-				seeds = append(seeds, seed+s)
+	min := 100000000000000
 
-			}
-		}
+	scanner.Scan()
+	line := scanner.Text()
+	cnt :=0
+	seedstring := strings.Split(line, " ")[1:]
+	//Println(seedstring)
+	seed := 0
+	for i := 0; i < len(seedstring); i += 2 {
+		startSeed, _ := strconv.Atoi(seedstring[i])
+		rangee, _ := strconv.Atoi(seedstring[i+1])
+		for s := 0; s < rangee; s++ {
+			seed = startSeed + s
+			Println(" seed", seed)
 
-		var mappa [][]string
-		for scanner.Scan() {
-			line := scanner.Text()
-			if len(line) > 0 {
-				Print()
-				if unicode.IsDigit(rune(line[0])) { // numeri
-					mappa = append(mappa, strings.Split(line, (" ")))
-				} else { // nuova mappa
-					if len(mappa) > 0 {
-					Println("m", mappa)
-					var history []int
+			//var mappa [][]string
+			status := true
+			for scanner.Scan() {
+				line := scanner.Text()
+				if len(line) > 0 && status{
+					if unicode.IsDigit(rune(line[0])) && status { // numeri
+						//mappa = append(mappa, strings.Split(line, (" ")))
+						numbers := strings.Split(line, (" "))
 
-					for m := range mappa {
-						for s := 0; s < len(seeds); s++ {
+						//Println("m", numbers)
+						//var history []int
+						dest, _ := strconv.Atoi(string(numbers[0]))
+						source, _ := strconv.Atoi(string(numbers[1]))
+						rangeee, _ := strconv.Atoi(string(numbers[2]))
 
-							dest, _ := strconv.Atoi(mappa[m][0])
-							source, _ := strconv.Atoi(mappa[m][1])
-							rangee, _ := strconv.Atoi(mappa[m][2])
-
-							if seeds[s] >= source && seeds[s] < source+rangee && slices.Index(history, s) == -1 {
-								diff := seeds[s] - source
-								seeds[s] = (dest + diff)
-								history = append(history, s)
-							}
+						if seed >= source && seed < source+rangeee /*&& slices.Index(history, s) == -1*/ {
+							diff := seed - source
+							seed = (dest + diff)
+							
+							status = false
+							//history = append(history, seed)
 						}
+
+					} else {
+						status = true
 					}
-					}
-					mappa = [][]string{}
+					Print(status,"")
 				}
 			}
-			cnt += 1
+
+			// Println("New Scan")
+			scanner = bufio.NewScanner(file)
+			
+			cnt+=1
+			Print(min,seed,seed<min)
+			if seed < min {
+				min = seed
+				Println("min=", seed)
+	
+			}
 		}
+
 	}
 	Println()
-	Println(seeds)
-	min := 100000000000000
-	for i := 0; i < len(seeds); i++ {
-		if min > seeds[i] {
-			min = seeds[i]
-		}
-	}
-	Println("minimo:", min)
+
+	//Println("minimo:", min)
+
 }
